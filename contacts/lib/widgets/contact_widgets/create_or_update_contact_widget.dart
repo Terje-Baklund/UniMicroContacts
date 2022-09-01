@@ -39,19 +39,19 @@ class _CreateOrUpdateContactState extends State<CreateOrUpdateContact> {
             buildEmail(),
             const SizedBox(height: 14),
             buildAddressLine(
-                addressLine: updatedContact.info!.invoiceAddress!.addressLine1,
+                addressLine: 1,
                 hintText: "Address Line 1",
                 initialValue: widget.contact.info?.invoiceAddress?.addressLine1,
                 validate: true),
             const SizedBox(height: 14),
             buildAddressLine(
-                addressLine: updatedContact.info!.invoiceAddress!.addressLine2,
+                addressLine: 2,
                 hintText: "Address Line 2 (Optional)",
                 initialValue: widget.contact.info?.invoiceAddress?.addressLine2,
                 validate: false),
             const SizedBox(height: 14),
             buildAddressLine(
-                addressLine: updatedContact.info!.invoiceAddress!.addressLine3,
+                addressLine: 3,
                 hintText: "Address Line 3 (Optional)",
                 initialValue: widget.contact.info?.invoiceAddress?.addressLine3,
                 validate: false),
@@ -130,8 +130,20 @@ class _CreateOrUpdateContactState extends State<CreateOrUpdateContact> {
               return null;
             }
           },
-          onChanged: (value) => setState(() => addressLine = value),
-        ),
+          onChanged: (value) => setState(() {
+            switch (addressLine) {
+              case 1:
+                updatedContact.info!.invoiceAddress!.addressLine1 = value;
+                break;
+              case 2:
+                updatedContact.info!.invoiceAddress!.addressLine2 = value;
+                break;
+              case 3:
+                updatedContact.info!.invoiceAddress!.addressLine3 = value;
+                break;
+            }
+          }),
+        )
       ],
     );
   }
@@ -255,7 +267,7 @@ class _CreateOrUpdateContactState extends State<CreateOrUpdateContact> {
           initialValue: widget.contact.info?.defaultPhone?.countryCode,
           validator: (value) {
             final pattern = r'^(?:[+])[0-9]', regex = RegExp(pattern);
-            if (value == "" || value!.length > 3 || !regex.hasMatch(value)) {
+            if (value == "" || value!.length > 4 || !regex.hasMatch(value)) {
               return 'Please enter a valid phone number';
             }
             return null;
@@ -310,12 +322,12 @@ class _CreateOrUpdateContactState extends State<CreateOrUpdateContact> {
         TextFormField(
           decoration: InputDecoration(
             border: OutlineInputBorder(),
-            hintText: "999-999-999",
+            hintText: "5599885533",
           ),
           initialValue: widget.contact.info?.defaultPhone?.number,
           validator: (value) {
-            final pattern = r'^[0-9-]*$', regex = new RegExp(pattern);
-            if (value == "" || value!.length > 15 || !regex.hasMatch(value)) {
+            final pattern = r'^[0-9]*$', regex = new RegExp(pattern);
+            if (value == "" || value!.length > 15 || !regex.hasMatch((value))) {
               return 'Please enter a valid phone number';
             }
             return null;
