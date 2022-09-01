@@ -1,5 +1,6 @@
 import 'package:contacts/providers/contacts_provider.dart';
 import 'package:contacts/providers/uni_authenticator.dart';
+import 'package:contacts/screens/contacts_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -25,29 +26,25 @@ class CompanyWidget extends StatelessWidget {
               color: Colors.grey.withOpacity(0.5),
               spreadRadius: 5,
               blurRadius: 7,
-              offset: Offset(0, 3), // changes position of shadow
+              offset: Offset(0, 3),
             ),
           ],
         ),
         child: ElevatedButton(
-          child: Text(companyMap.name),
+          child: Text(
+            companyMap.name,
+            style: TextStyle(fontSize: 30),
+            textAlign: TextAlign.center,
+          ),
           onPressed: () => {
             Provider.of<UniAuthenticator>(context, listen: false)
                 .setSelectedCompanyKey(companyMap.key),
+            // navigator push Contacts
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Contacts()),
+            )
           },
         ));
-    // GestureDetector(
-    //   onTap: () => {
-    //     Provider.of<UniAuthenticator>(context, listen: false)
-    //         .setSelectedCompanyKey(companyMap.key),
-    //   },
-    //   child: Padding(
-    //     padding: EdgeInsets.all(20),
-    //     child: Text(
-    //       "${companyMap.name} Hello",
-    //       style: TextStyle(fontSize: 20, color: Colors.white),
-    //     ),
-    //   ),
-    // ));
   }
 }

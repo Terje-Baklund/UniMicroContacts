@@ -1,7 +1,6 @@
 import 'package:contacts/models/single_contact.dart';
 import 'package:contacts/providers/contacts_provider.dart';
-import 'package:contacts/widgets/company_widget.dart';
-import 'package:contacts/widgets/single_contact_widget.dart';
+import 'package:contacts/widgets/company_widgets/company_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

@@ -3,7 +3,7 @@ class DefaultEmail {
   int? businessRelationId;
   bool? deleted;
   String? description;
-  String emailAddress;
+  String? emailAddress;
 
   DefaultEmail({
     this.id,
@@ -12,4 +12,13 @@ class DefaultEmail {
     this.description,
     required this.emailAddress,
   });
+
+  DefaultEmail.jsonToDefaultEmail(jsonDefaultEmail)
+      : id = jsonDefaultEmail['ID'],
+        businessRelationId = jsonDefaultEmail['BusinessRelationID'],
+        deleted = jsonDefaultEmail['Deleted'],
+        description = jsonDefaultEmail['Description'],
+        emailAddress = jsonDefaultEmail['EmailAddress'];
+
+  DefaultEmail.dummy() : emailAddress = "";
 }

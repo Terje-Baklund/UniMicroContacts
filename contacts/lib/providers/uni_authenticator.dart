@@ -1,33 +1,22 @@
 import 'dart:convert';
-
 import 'package:contacts/models/company.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:oauth2/oauth2.dart';
-import 'package:dartz/dartz.dart';
-
 import 'package:http/http.dart' as http;
-
-import 'package:contacts/screens/check_login_screen.dart';
-
-typedef AuthUriCallback = Future<Uri> Function(Uri authorizationUrl);
 
 class UniAuthenticator with ChangeNotifier {
   var accessToken;
-  String? _companyKey = null;
+  String? _companyKey;
   List<Company> allCompanies = [];
   bool _isLoggedIn = false;
   bool _isLoading = false;
   FlutterAppAuth appAuth = FlutterAppAuth();
-
+  bool get isLoggedIn => _isLoggedIn;
+  bool get isLoading => _isLoading;
+  Credentials get credentials => _credentials;
   var _credentials;
-
-  void setSelectedCompanyKey(key) {
-    _companyKey = key;
-    print("Notifying listeners");
-    notifyListeners();
-  }
 
   get companyKey => _companyKey;
   static const clientId = '41da138d-19a4-4000-8e18-0dadad22b6bf';
@@ -45,11 +34,12 @@ class UniAuthenticator with ChangeNotifier {
   static final redirectURL = Uri.parse('http://localhost.:3000/callback');
   static final endpointURL = Uri.parse('http://localhost:8080');
 
-  bool get isLoggedIn => _isLoggedIn;
-  bool get isLoading => _isLoading;
-  Credentials get credentials => _credentials;
+  void setSelectedCompanyKey(key) {
+    _companyKey = key;
+    notifyListeners();
+  }
 
-  Future<void> getCompanyKeys() async {
+  Future<List<Company>> getCompanyKeys() async {
     bool same = true;
     Uri url = Uri.parse("https://test-api.softrig.com/api/init/companies");
     try {
@@ -67,12 +57,11 @@ class UniAuthenticator with ChangeNotifier {
         allCompanies.add(newCompany);
         same = false;
       }
-      // -------Her er det noe ------
-      if (same) return;
-      notifyListeners();
+      return allCompanies;
     } catch (e) {
       print(e);
     }
+    return [];
   }
 
   AuthorizationCodeGrant createGrant() {
@@ -94,16 +83,10 @@ class UniAuthenticator with ChangeNotifier {
     notifyListeners();
     try {
       final httpClient = await grant.handleAuthorizationResponse(queryParams);
-      print("$httpClient ------------- http Colient ----------------");
-      print(httpClient.toString());
       _credentials = httpClient.credentials;
       accessToken = json.decode(credentials.toJson())['accessToken'];
-      print("$_credentials ------------- credentials ----------------");
       var stringCredentials = _credentials.toJson();
-      print(stringCredentials);
-      print("Above were credentials");
       _isLoggedIn = true;
-      print(isLoggedIn);
     } on FormatException {
       print("Format Exception");
     } on AuthorizationException catch (error) {
@@ -113,15 +96,5 @@ class UniAuthenticator with ChangeNotifier {
     }
     _isLoading = false;
     notifyListeners();
-  }
-
-  Future<void> signIn(AuthUriCallback authorizationCallback) async {
-    final grant = createGrant();
-    print("Grant created -----------------------------------");
-    final redirectUrl = await authorizationCallback(getAuthorizationUrl(grant));
-    print("Redirected -----------------------------------");
-    await handleAuthorizationResponse(grant, redirectUrl.queryParameters);
-    print("Done waiting for handler -----------------------------------");
-    grant.close();
   }
 }
