@@ -140,7 +140,7 @@ class SingleContactDetails extends StatelessWidget {
                   style: TextButton.styleFrom(padding: EdgeInsets.zero),
                   onPressed: () {
                     launchURL(
-                        "tel:${contactObject.info?.defaultPhone?.number ?? "Null"}");
+                        "sms:${contactObject.info?.defaultPhone?.number ?? "Null"}");
                   },
                   child: ListTile(
                     title: Text(contactObject.info?.defaultPhone?.description ??
@@ -204,6 +204,7 @@ class SingleContactDetails extends StatelessWidget {
         mode: LaunchMode.externalApplication,
       );
     } else {
+      // Remmember mailto does not work on iOS simulator since it has no mail app
       throw 'Could not launch $url';
     }
   }
