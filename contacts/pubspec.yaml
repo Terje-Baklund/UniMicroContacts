@@ -37,6 +37,7 @@ dependencies:
   oauth2: ^2.0.0
   dartz: ^0.10.1
   webview_flutter: ^3.0.4
+  flutter_inappwebview: ^5.4.3+7
   flutter_web_auth_2: ^1.0.1
   flutter_appauth: ^4.2.0
   provider: ^6.0.3
